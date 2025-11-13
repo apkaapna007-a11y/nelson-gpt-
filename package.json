@@ -1,6 +1,6 @@
 {
-  "name": "zola",
-  "version": "0.1.0",
+  "name": "nelsongpt",
+  "version": "0.1.0", "description": "NelsonGPT — Smart Pediatric Assistant (Zola-based UI)",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",

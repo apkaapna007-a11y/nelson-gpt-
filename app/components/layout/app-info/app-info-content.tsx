@@ -2,18 +2,17 @@ export function AppInfoContent() {
   return (
     <div className="space-y-4">
       <p className="text-foreground leading-relaxed">
-        <span className="font-medium">Zola</span> is the open-source interface
-        for AI chat.
+        <span className="font-medium">NelsonGPT</span> is a Smart Pediatric Assistant.
         <br />
-        Multi-model, BYOK-ready, and fully self-hostable.
+        Clinical mode for on-the-go answers; Academic mode for deep dives.
         <br />
-        Use Claude, OpenAI, Gemini, local models, and more, all in one place.
+        Evidence-backed with citations to Nelson’s Textbook of Pediatrics.
         <br />
       </p>
       <p className="text-foreground leading-relaxed">
         The code is available on{" "}
         <a
-          href="https://github.com/ibelick/zola"
+          href="https://github.com/apkaapna007-a11y/nelson-gpt-"
           target="_blank"
           rel="noopener noreferrer"
           className="underline"

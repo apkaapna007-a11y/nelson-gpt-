@@ -1,6 +1,6 @@
 "use client"
 
-import { ModelSelector } from "@/components/common/model-selector/base"
+import { useMemo, useRef, useCallback, useEffect } from "react"
 import {
   PromptInput,
   PromptInputAction,
@@ -8,9 +8,9 @@ import {
   PromptInputTextarea,
 } from "@/components/prompt-kit/prompt-input"
 import { Button } from "@/components/ui/button"
-import { getModelInfo } from "@/lib/models"
+
 import { ArrowUpIcon, StopIcon } from "@phosphor-icons/react"
-import { useCallback, useEffect, useMemo, useRef } from "react"
+
 import { PromptSystem } from "../suggestions/prompt-system"
 import { ButtonFileUpload } from "./button-file-upload"
 import { ButtonSearch } from "./button-search"
@@ -56,8 +56,7 @@ export function ChatInput({
   enableSearch,
   quotedText,
 }: ChatInputProps) {
-  const selectModelConfig = getModelInfo(selectedModel)
-  const hasSearchSupport = Boolean(selectModelConfig?.webSearch)
+  const hasSearchSupport = false
   const isOnlyWhitespace = (text: string) => !/[^\s]/.test(text)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -181,7 +180,7 @@ export function ChatInput({
           <FileList files={files} onFileRemove={onFileRemove} />
           <PromptInputTextarea
             ref={textareaRef}
-            placeholder="Ask Zola"
+            placeholder="Ask NelsonGPT"
             onKeyDown={handleKeyDown}
             onPaste={handlePaste}
             className="min-h-[44px] pt-3 pl-4 text-base leading-[1.3] sm:text-base md:text-base"
@@ -193,19 +192,8 @@ export function ChatInput({
                 isUserAuthenticated={isUserAuthenticated}
                 model={selectedModel}
               />
-              <ModelSelector
-                selectedModelId={selectedModel}
-                setSelectedModelId={onSelectModel}
-                isUserAuthenticated={isUserAuthenticated}
-                className="rounded-full"
-              />
-              {hasSearchSupport ? (
-                <ButtonSearch
-                  isSelected={enableSearch}
-                  onToggle={setEnableSearch}
-                  isAuthenticated={isUserAuthenticated}
-                />
-              ) : null}
+              <ModeToggle selectedMode={selectedModel} onChange={onSelectModel} />
+
             </div>
             <PromptInputAction
               tooltip={status === "streaming" ? "Stop" : "Send"}
@@ -228,6 +216,36 @@ export function ChatInput({
           </PromptInputActions>
         </PromptInput>
       </div>
+    </div>
+  )
+}
+
+function ModeToggle({
+  selectedMode,
+  onChange,
+}: {
+  selectedMode: string
+  onChange: (mode: string) => void
+}) {
+  const mode = selectedMode === "academic" ? "academic" : "clinical"
+  return (
+    <div className="bg-muted/50 border-border/50 inline-flex items-center gap-1 rounded-full border p-1 text-xs">
+      <Button
+        variant={mode === "clinical" ? "default" : "ghost"}
+        size="sm"
+        className="h-7 rounded-full px-3"
+        onClick={() => onChange("clinical")}
+      >
+        Clinical
+      </Button>
+      <Button
+        variant={mode === "academic" ? "default" : "ghost"}
+        size="sm"
+        className="h-7 rounded-full px-3"
+        onClick={() => onChange("academic")}
+      >
+        Academic
+      </Button>
     </div>
   )
 }

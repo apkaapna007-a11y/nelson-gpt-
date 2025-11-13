@@ -1,9 +1,7 @@
 import { SYSTEM_PROMPT_DEFAULT } from "@/lib/config"
-import { getAllModels } from "@/lib/models"
-import { getProviderForModel } from "@/lib/openproviders/provider-map"
-import type { ProviderWithoutOllama } from "@/lib/user-keys"
 import { Attachment } from "@ai-sdk/ui-utils"
 import { Message as MessageAISDK, streamText, ToolSet } from "ai"
+import { createMistral } from "@ai-sdk/mistral"
 import {
   incrementMessageCount,
   logUserMessage,
@@ -86,33 +84,32 @@ export async function POST(req: Request) {
       })
     }
 
-    const allModels = await getAllModels()
-    const modelConfig = allModels.find((m) => m.id === model)
+    const effectiveSystemPromptBase = systemPrompt || SYSTEM_PROMPT_DEFAULT
 
-    if (!modelConfig || !modelConfig.apiSdk) {
-      throw new Error(`Model ${model} not found`)
+    const nelsonMode = model === "academic" ? "academic" : "clinical"
+
+    const modeInstruction =
+      nelsonMode === "academic"
+        ? "You are in Academic mode: provide a structured, comprehensive explanation with key guidelines, pathophysiology, and short citations to Nelson sections."
+        : "You are in Clinical mode: give concise, pragmatic steps, key red flags, and weight/age-based dosing; include brief Nelson section citations when applicable."
+
+    const effectiveSystemPrompt = `${effectiveSystemPromptBase}\n\nMode: ${nelsonMode.toUpperCase()}\n${modeInstruction}`
+
+    const apiKey = process.env.NELSON_API_KEY || process.env.MISTRAL_API_KEY
+    if (!apiKey) {
+      throw new Error("Missing NELSON_API_KEY/MISTRAL_API_KEY")
     }
 
-    const effectiveSystemPrompt = systemPrompt || SYSTEM_PROMPT_DEFAULT
-
-    let apiKey: string | undefined
-    if (isAuthenticated && userId) {
-      const { getEffectiveApiKey } = await import("@/lib/user-keys")
-      const provider = getProviderForModel(model)
-      apiKey =
-        (await getEffectiveApiKey(userId, provider as ProviderWithoutOllama)) ||
-        undefined
-    }
+    const mistral = createMistral({ apiKey })
 
     const result = streamText({
-      model: modelConfig.apiSdk(apiKey, { enableSearch }),
+      model: mistral("mistral-large-latest"),
       system: effectiveSystemPrompt,
       messages: messages,
       tools: {} as ToolSet,
-      maxSteps: 10,
+      maxSteps: 4,
       onError: (err: unknown) => {
         console.error("Streaming error occurred:", err)
-        // Don't set streamError anymore - let the AI SDK handle it through the stream
       },
 
       onFinish: async ({ response }) => {
@@ -123,7 +120,7 @@ export async function POST(req: Request) {
             messages:
               response.messages as unknown as import("@/app/types/api.types").Message[],
             message_group_id,
-            model,
+            model: nelsonMode,
           })
         }
       },

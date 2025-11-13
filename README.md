@@ -1,81 +1,27 @@
-# Zola
+# NelsonGPT — Smart Pediatric Assistant
 
-[zola.chat](https://zola.chat)
-
-**Zola** is the open-source chat interface for all your models.
-
-![zola cover](./public/cover_zola.jpg)
-
-## Features
-
-- Multi-model support: OpenAI, Mistral, Claude, Gemini, Ollama (local models)
-- Bring your own API key (BYOK) support via OpenRouter
-- File uploads
-- Clean, responsive UI with light/dark themes
-- Built with Tailwind CSS, shadcn/ui, and prompt-kit
-- Open-source and self-hostable
-- Customizable: user system prompt, multiple layout options
-- Local AI with Ollama: Run models locally with automatic model detection
-- Full MCP support (wip)
+NelsonGPT is a specialized AI chat app for pediatricians. It keeps Zola’s elegant UI but connects to a Mistral-only backend with Clinical and Academic modes. Answers are concise, evidence-based, and cite the Nelson Textbook of Pediatrics when applicable.
 
 ## Quick Start
 
-### Option 1: With OpenAI (Cloud)
-
 ```bash
-git clone https://github.com/ibelick/zola.git
-cd zola
 npm install
-echo "OPENAI_API_KEY=your-key" > .env.local
+cp .env.example .env.local
+# Set your Supabase keys and NELSON_API_KEY (Mistral)
 npm run dev
 ```
 
-### Option 2: With Ollama (Local)
+## Environment
 
-```bash
-# Install and start Ollama
-curl -fsSL https://ollama.ai/install.sh | sh
-ollama pull llama3.2  # or any model you prefer
+- NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY
+- NELSON_API_KEY (or MISTRAL_API_KEY)
+- NEXT_PUBLIC_APP_NAME=NelsonGPT
 
-# Clone and run Zola
-git clone https://github.com/ibelick/zola.git
-cd zola
-npm install
-npm run dev
-```
-
-Zola will automatically detect your local Ollama models!
-
-### Option 3: Docker with Ollama
-
-```bash
-git clone https://github.com/ibelick/zola.git
-cd zola
-docker-compose -f docker-compose.ollama.yml up
-```
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/ibelick/zola)
-
-To unlock features like auth, file uploads, see [INSTALL.md](./INSTALL.md).
-
-## Built with
-
-- [prompt-kit](https://prompt-kit.com/) — AI components
-- [shadcn/ui](https://ui.shadcn.com) — core components
-- [motion-primitives](https://motion-primitives.com) — animated components
-- [vercel ai sdk](https://vercel.com/blog/introducing-the-vercel-ai-sdk) — model integration, AI features
-- [supabase](https://supabase.com) — auth and storage
-
-## Sponsors
-
-<a href="https://vercel.com/oss">
-  <img alt="Vercel OSS Program" src="https://vercel.com/oss/program-badge.svg" />
-</a>
+## Features
+- Clinical mode (concise on-the-go guidance)
+- Academic mode (structured deep explanations with citations)
+- Supabase authentication
+- Vercel-ready
 
 ## License
-
 Apache License 2.0
-
-## Notes
-
-This is a beta release. The codebase is evolving and may change.

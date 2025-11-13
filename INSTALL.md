@@ -1,8 +1,8 @@
-# Zola Installation Guide
+# NelsonGPT Installation Guide
 
-Zola is a free, open-source AI chat app with multi-model support. This guide covers how to install and run Zola on different platforms, including Docker deployment options.
+NelsonGPT is a pediatric-focused AI chat app built on the Zola UI. This guide covers how to install and run NelsonGPT. Multi-provider features are disabled; Mistral only.
 
-![Zola screenshot](./public/cover_zola.webp)
+
 
 ## Prerequisites
 
@@ -81,7 +81,7 @@ Copy the generated value and add it to your `.env.local` file as the `CSRF_SECRE
 
 ### BYOK (Bring Your Own Key) Setup
 
-Zola supports BYOK functionality, allowing users to securely store and use their own API keys for AI providers. To enable this feature, you need to configure an encryption key for secure storage of user API keys.
+BYOK is optional. NelsonGPT only requires a Mistral API key (NELSON_API_KEY).
 
 #### Generating an Encryption Key
 
@@ -299,7 +299,7 @@ Create the buckets `chat-attachments` and `avatars` in your Supabase dashboard:
 
 ## Ollama Setup (Local AI Models)
 
-Ollama allows you to run AI models locally on your machine. Zola has built-in support for Ollama with automatic model detection.
+Ollama integration is not used by NelsonGPT.
 
 ### Installing Ollama
 
@@ -342,7 +342,7 @@ ollama list
 ollama serve
 ```
 
-### Zola + Ollama Integration
+### Ollama Integration (Disabled)
 
 Zola automatically detects all models available in your Ollama installation. No additional configuration is needed!
 
@@ -358,7 +358,7 @@ Zola automatically detects all models available in your Ollama installation. No 
 
 #### Default Configuration
 
-By default, Zola connects to Ollama at `http://localhost:11434`. This works for local installations.
+Ollama is disabled by default.
 
 #### Custom Ollama URL
 
@@ -379,7 +379,7 @@ OLLAMA_BASE_URL=http://your-ollama-server:11434 npm run dev
 
 #### Settings UI
 
-Zola includes a settings interface where you can:
+Settings allow toggling Clinical/Academic modes and profile preferences.
 
 - Enable/disable Ollama integration
 - Configure custom Ollama base URLs
@@ -675,7 +675,7 @@ environment:
 
 ### Deploy to Vercel
 
-The easiest way to deploy Zola is using Vercel:
+The easiest way to deploy NelsonGPT is using Vercel:
 
 1. Push your code to a Git repository (GitHub, GitLab, etc.)
 2. Import the project into Vercel
@@ -704,7 +704,7 @@ npm start
 
 ## Configuration Options
 
-You can customize various aspects of Zola by modifying the configuration files:
+You can customize NelsonGPT in the configuration files:
 
 - `app/lib/config.ts`: Configure AI models, daily message limits, etc.
 - `.env.local`: Set environment variables and API keys
